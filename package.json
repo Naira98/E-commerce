@@ -1,0 +1,35 @@
+{
+  "name": "node-first-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js",
+    "start-server": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express-handlebars": "^6.0.0",
+    "nodemon": "^3.0.2",
+    "npm": "^10.3.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "connect-flash": "^0.1.1",
+    "connect-mongodb-session": "^5.0.0",
+    "csurf": "^1.10.0",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-handlebars": "3.0",
+    "express-session": "^1.18.0",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.5.2",
+    "mysql2": "^3.9.1",
+    "pug": "^3.0.2",
+    "sequelize": "^6.36.0"
+  }
+}
