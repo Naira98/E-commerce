@@ -1,5 +1,41 @@
-<%= include ('../includes/head.ejs') %>
-</head>
-<body>
-<%= include ('../includes/nav.ejs') %>
-<%= include ('../includes/end.ejs') %>
+<%- include('../includes/head.ejs') %>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧳</text></svg>">
+    <link rel="stylesheet" href="/css/cart.css">
+    </head>
+
+    <body>
+        <%- include('../includes/nav.ejs') %>
+        <main>
+            <% if (products.length > 0) { %>
+                <ul class="cart__item-list">
+                    <% products.forEach(p => { %>
+                        <li class="cart__item">
+                            <h1><%= p.productId.title %></h1>
+                            <h2>Quantity: <%= p.quantity %></h2>
+                                <input type="hidden" value="<%= p._id %>" name="productId">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                        </li>
+                    <% }) %>
+                </ul>
+                <hr>
+                <div class="centered">
+                  <h1>Total Sum: <%= total %>$</h1>
+                </div>
+                <div class="centered">
+                    <button class="btn" id="order-btn">Checkout</button>
+                    <script src="https://js.stripe.com/v3/"></script>
+                    <script>
+                        let stripe = Stripe('pk_test_51OnqOaIqI7wPCEBLxf6iUDKSEpoRXU3v9k1f4pwxHmAEDCvElRi47ZIv6BvTktqFSVvQXs83AlFoYOMYHWhvFGsS00uYxia8ej');
+                        const orderBtn = document.getElementById('order-btn')
+                        orderBtn.addEventListener('click', function() {
+                            stripe.redirectToCheckout({
+                                sessionId: '<%= sessionId %>'
+                            })
+                        })
+                    </script>
+                </div>
+            <% } else { %>
+                <h1>No Products in Cart!</h1>
+            <% } %>
+        </main>
+        <%- include('../includes/end.ejs') %>

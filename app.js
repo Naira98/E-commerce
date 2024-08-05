@@ -6,7 +6,6 @@ var MongoDBStore = require("connect-mongodb-session")(session);
 const csrf = require("csurf");
 const flash = require("connect-flash");
 const multer = require("multer");
-const dotenv = require("dotenv");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
@@ -16,11 +15,11 @@ const errorController = require("./controllers/error.js");
 const User = require("./models/user");
 // const mongoConnect = require("./util/database").mongoConnect;
 const mongoose = require("mongoose");
+const { MONGOOSE_PASSWORD, SESSION_SECRET } = require("./util/config.js");
 
 const app = express();
-dotenv.config();
 
-const MOGODB_URI = `mongodb+srv://naira:${process.env.MONGOOSE_PASSWORD}@cluster0.xk4dvlj.mongodb.net/shop?retryWrites=true&w=majority`;
+const MOGODB_URI = `mongodb+srv://naira:${MONGOOSE_PASSWORD}@cluster0.xk4dvlj.mongodb.net/shop?retryWrites=true&w=majority`;
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -59,7 +58,7 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: store,
