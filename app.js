@@ -1,4 +1,7 @@
 const path = require("path");
+const fs = require("fs");
+const https = require("https");
+
 const bodyParser = require("body-parser");
 const express = require("express");
 const session = require("express-session");
@@ -15,11 +18,17 @@ const errorController = require("./controllers/error.js");
 const User = require("./models/user");
 // const mongoConnect = require("./util/database").mongoConnect;
 const mongoose = require("mongoose");
-const { MONGOOSE_PASSWORD, SESSION_SECRET } = require("./util/config.js");
+const {
+  PORT,
+  MONGOOSE_USER,
+  MONGOOSE_PASSWORD,
+  MONGOOSE_DATABASE,
+  SESSION_SECRET,
+} = require("./util/config.js");
 
 const app = express();
 
-const MOGODB_URI = `mongodb+srv://naira:${MONGOOSE_PASSWORD}@cluster0.xk4dvlj.mongodb.net/shop?retryWrites=true&w=majority`;
+const MOGODB_URI = `mongodb+srv://${MONGOOSE_USER}:${MONGOOSE_PASSWORD}@cluster0.xk4dvlj.mongodb.net/${MONGOOSE_DATABASE}?retryWrites=true&w=majority`;
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -43,6 +52,9 @@ const fileFilter = (req, file, cb) => {
 };
 
 const csrfProtection = csrf();
+
+// const privateKey = fs.readFileSync("server.key");
+// const certificate = fs.readFileSync("server.cert");
 
 const store = new MongoDBStore({
   uri: MOGODB_URI,
@@ -112,6 +124,9 @@ app.use((error, req, res, next) => {
 mongoose
   .connect(MOGODB_URI)
   .then(() => {
-    app.listen(3000);
+    // https
+    //   .createServer({ key: privateKey, cert: certificate }, app)
+    //   .listen(PORT || 3000);
+    app.listen(PORT || 3000);
   })
   .catch((err) => console.log(err));
