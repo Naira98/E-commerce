@@ -181,7 +181,9 @@ exports.postReset = (req, res) => {
               to: req.body.email,
               subject: "Password Reset",
               html: `<p>You requested a password reset</p>
-              <p>Click this <a href='http://localhost:3000/reset/${token}'>link</a> to reset your password</p>`,
+              <p>Click this <a href='http://localhost:3000/reset/${token}'>link</a> to reset your password</p>
+              <p>Token available only for 1 hour </p> 
+              `,
             },
             function (err, res) {
               if (err) {
