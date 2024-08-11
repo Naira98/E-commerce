@@ -1,6 +1,4 @@
 const path = require("path");
-const fs = require("fs");
-const https = require("https");
 
 const bodyParser = require("body-parser");
 const express = require("express");
@@ -52,9 +50,6 @@ const fileFilter = (req, file, cb) => {
 };
 
 const csrfProtection = csrf();
-
-// const privateKey = fs.readFileSync("server.key");
-// const certificate = fs.readFileSync("server.cert");
 
 const store = new MongoDBStore({
   uri: MOGODB_URI,
@@ -109,7 +104,6 @@ app.use(errorController.get404);
 
 // Express error handling middleware with 4 arguments
 app.use((error, req, res, next) => {
-  // res.status(error.httpStatusCode).render(...)
   res.status(500).render("500", {
     pageTitle: "Error",
     path: "/500",
@@ -124,9 +118,6 @@ app.use((error, req, res, next) => {
 mongoose
   .connect(MOGODB_URI)
   .then(() => {
-    // https
-    //   .createServer({ key: privateKey, cert: certificate }, app)
-    //   .listen(PORT || 3000);
     app.listen(PORT || 3000);
   })
   .catch((err) => console.log(err));

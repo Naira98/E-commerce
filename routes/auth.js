@@ -34,7 +34,6 @@ router.post(
       .custom((value, { req }) => {
         return User.findOne({ email: value }).then((userDocs) => {
           if (userDocs) {
-            console.log(userDocs);
             return Promise.reject("Email already exists.");
           }
         });

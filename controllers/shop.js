@@ -186,7 +186,7 @@ exports.getCheckout = (req, res, next) => {
           });
         })
         .catch((err) => {
-          console.log("error in getCheckout", err);
+          // console.log("error in getCheckout", err);
           const error = new Error(err);
           error.httpStatusCode = 500;
           next(error);
