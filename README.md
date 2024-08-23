@@ -1,13 +1,14 @@
-## E-commerce platform allows sellers to showcase their products directly to customers over the internet to reach a global audience, operate 24/7, making it easier for customers to browse, purchase, and receive products from anywhere.
+# E-commerce
+## Platform allows sellers to showcase their products directly to customers over the internet to reach a global audience, operate 24/7, making it easier for customers to browse, purchase, and receive products from anywhere.
 
-# Technologies
+### Technologies
 - Nodejs
 - Express
 - Mongoose
 - .ejs templates
 
 
-# Features
+### Features
 - Authentication with session management.
 - Authorization.
 - Validation user inputs with express-validator.
