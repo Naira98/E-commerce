@@ -6,9 +6,7 @@ const shopController = require("../controllers/shop.js");
 
 const isAuth = require("../middleware/is-auth.js");
 
-router.get("/", shopController.getIndex);
-
-router.get("/products", shopController.getProducts);
+router.get("/", shopController.getProducts);
 
 router.get("/products/:productId", shopController.getProductDetails);
 
@@ -17,6 +15,8 @@ router.get("/cart", isAuth, shopController.getCart);
 router.post("/delete-from-cart", isAuth, shopController.postDeleteFromCart);
 
 router.post("/cart", isAuth, shopController.postCart);
+
+router.post("/decrease-quantity", isAuth, shopController.decreaseQunatity);
 
 router.get("/checkout", isAuth, shopController.getCheckout);
 

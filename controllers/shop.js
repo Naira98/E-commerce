@@ -10,33 +10,6 @@ const Order = require("../models/order");
 
 const ITEMS_PER_PAGE = 3;
 
-exports.getIndex = (req, res, next) => {
-  const page = +req.query.page || 1;
-  let totalItems;
-
-  Product.countDocuments()
-    .then((itemsCount) => {
-      totalItems = itemsCount;
-      return Product.find()
-        .skip((page - 1) * ITEMS_PER_PAGE)
-        .limit(ITEMS_PER_PAGE);
-    })
-    .then((products) => {
-      res.render("shop/index", {
-        products: products,
-        pageTitle: "Shop",
-        path: "/",
-        pageNums: Math.ceil(totalItems / ITEMS_PER_PAGE),
-        currentPage: page,
-      });
-    })
-    .catch((err) => {
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      next(error);
-    });
-};
-
 exports.getProducts = (req, res, next) => {
   const page = +req.query.page || 1;
   let totalItems;
@@ -52,7 +25,7 @@ exports.getProducts = (req, res, next) => {
       res.render("shop/product-list", {
         products: products,
         pageTitle: "Shop",
-        path: "/product-list",
+        path: "/",
         pageNums: Math.ceil(totalItems / ITEMS_PER_PAGE),
         currentPage: page,
       });
@@ -69,7 +42,7 @@ exports.getProductDetails = (req, res, next) => {
     .then((product) => {
       res.render("shop/product-details", {
         pageTitle: product.title,
-        path: "/product-list",
+        path: "/",
         product: product,
       });
     })
@@ -104,6 +77,21 @@ exports.postCart = (req, res, next) => {
   Product.findById(productId)
     .then((product) => {
       return req.user.addToCart(product);
+    })
+    .then(() => {
+      res.redirect("/cart");
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      next(error);
+    });
+};
+exports.decreaseQunatity = (req, res, next) => {
+  const productId = req.body.productId;
+  Product.findById(productId)
+    .then((product) => {
+      return req.user.decreaseQunatity(product);
     })
     .then(() => {
       res.redirect("/cart");
@@ -156,6 +144,7 @@ exports.getCheckout = (req, res, next) => {
       products.forEach((prod) => {
         total += prod.quantity * prod.productId.price;
       });
+      total = total.toFixed(2);
       return stripe.checkout.sessions
         .create({
           payment_method_types: ["card"],

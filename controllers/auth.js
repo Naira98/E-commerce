@@ -31,11 +31,10 @@ exports.getLogin = (req, res, next) => {
   });
 };
 
-exports.postLogin = (req, res) => {
+exports.postLogin = (req, res, next) => {
   const { email, password } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log(errors.array());
     return res.status(422).render("auth/login", {
       pageTitle: "Login",
       path: "/login",
@@ -82,7 +81,7 @@ exports.postLogin = (req, res) => {
   });
 };
 
-exports.getSignup = (req, res) => {
+exports.getSignup = (req, res, next) => {
   let message = req.flash("error");
   if (message.length > 0) {
     message = message[0];
@@ -144,7 +143,7 @@ exports.postLogout = (req, res, next) => {
   });
 };
 
-exports.getReset = (req, res) => {
+exports.getReset = (req, res, next) => {
   let message = req.flash("error");
   if (message.length > 0) {
     message = message[0];
@@ -158,7 +157,7 @@ exports.getReset = (req, res) => {
   });
 };
 
-exports.postReset = (req, res) => {
+exports.postReset = (req, res, next) => {
   crypto.randomBytes(32, (err, buffer) => {
     if (err) {
       console.log(err);
@@ -189,7 +188,6 @@ exports.postReset = (req, res) => {
               if (err) {
                 console.log(err);
               }
-              console.log(res);
             }
           );
         });
@@ -202,37 +200,39 @@ exports.postReset = (req, res) => {
   });
 };
 
-exports.getNewPassword = (req, res) => {
+exports.getNewPassword = (req, res, next) => {
   const resetToken = req.params.resetToken;
   User.findOne({
     resetToken: resetToken,
     resetTokenExpiration: { $gt: Date.now() },
-  }).then((user) => {
-    if (user) {
-      let message = req.flash("error");
-      if (message.length > 0) {
-        message = message[0];
-      } else {
-        message = null;
-      }
-      res
-        .render("auth/new-password", {
+  })
+    .then((user) => {
+      if (user) {
+        let message = req.flash("error");
+        if (message.length > 0) {
+          message = message[0];
+        } else {
+          message = null;
+        }
+        res.render("auth/new-password", {
           pageTitle: "New Password",
           path: "/new-password",
           errorMessage: message,
           userId: user._id.toString(),
           passwordToken: resetToken,
-        })
-        .catch((err) => {
-          const error = new Error(err);
-          error.httpStatusCode = 500;
-          next(error);
         });
-    }
-  });
+      } else {
+        throw new Error("Token is invalid");
+      }
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      next(error);
+    });
 };
 
-exports.postNewPassword = (req, res) => {
+exports.postNewPassword = (req, res, next) => {
   const { userId, password, passwordToken } = req.body;
   let resetUser;
   User.findOne({

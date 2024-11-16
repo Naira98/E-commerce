@@ -155,10 +155,10 @@ exports.deleteProduct = (req, res, next) => {
       return Product.deleteOne({ _id: productId, userId: req.user._id });
     })
     .then(() => {
-      res.status(200).json({message: 'Successed'})
+      res.status(200).json({ message: "Successed" });
     })
     .catch((err) => {
-      res.status(500).json({message: 'Deleting product failed'})
+      res.status(500).json({ message: "Deleting product failed" });
 
       // const error = new Error(err);
       // error.httpStatusCode = 500;
@@ -170,7 +170,8 @@ exports.getAdminProducts = (req, res, next) => {
   const page = +req.query.page || 1;
   let totalItems;
 
-  Product.countDocuments()
+  Product.find({ userId: req.user._id })
+    .countDocuments()
     .then((itemsCount) => {
       totalItems = itemsCount;
       return (
